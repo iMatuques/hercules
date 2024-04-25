@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log de Mensagens</title>
+    <script src="socket.io.min.js"></script>
+    <link rel="stylesheet" href="./static/index.css">
+    <link rel="stylesheet" href="./static/css/darkmodeButton.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./static/css/navbar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="select2.min.js"></script>
+</head>
+
+<body class="hero-anime">
+
+    <!--Modal-->
+
+        <div class="container">
+            <div class="modal" id="tituloModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" style="color:black">Salvar pacote</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="titulo" style="color:black">Título:</label>
+                                <input type="text" class="form-control" id="titulo">
+                                <label for="obs" style="color:black">Use um título diferente para cada pacote!</label>
+                            </div>
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" onclick="salvarComTitulo()">Salvar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Navbar-->
+        <div class="navigation-wrap bg-light start-header start-style">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <nav class="navbar navbar-expand-md navbar-light">
+
+                            <a class="navbar-brand"><img src="./static/images/icons/logo.png" alt=""></a>
+
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                                <ul class="navbar-nav ml-auto py-4 py-md-0">
+                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                        <a class="nav-link" href="/home">Home</a>
+                                    </li>
+                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+                                            role="button" aria-haspopup="true" aria-expanded="false">Ferramentas</a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="/parserPackets">Parser Packets</a>
+                                            <a class="dropdown-item" href="#">Hércules só que bom</a>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                        <a class="nav-link" href="#">Tutoriais</a>
+                                    </li>
+                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                        <a class="nav-link" href="#" onclick="switchMode()">Sugestões</a>
+                                    </li>
+                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
+                                            role="button" aria-haspopup="true" aria-expanded="false">{{username}}</a>
+                                        <div class="dropdown-menu" onclick="switchMode()">
+                                            <a class="dropdown-item">
+                                                <img id="sunIcon" src="./static/images/icons/sun.svg"
+                                                    style="max-width: 20px; max-height: 20px;" alt="Sun Icon">
+                                                <img id="moonIcon" src="./static/images/icons/moon.svg"
+                                                    style="max-width: 20px; max-height: 20px;" alt="Moon Icon"
+                                                    style="display: none;">
+                                            </a>
+                                            <a class="dropdown-item" href="/logout">Logout</a>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Hercules -->
+        <div class="container__main">
+            <div>
+                <label>Receive/Sent data</label>
+                <div class="container-log">
+                    <div id="group-log">
+                        <span class="title-receive_sent">Receive</span>
+                        <p class="content-package" id="log-container-receive"> <!-- Log de mensagens será exibido aqui -->
+                        </p>
+                        <span class="title receive-sent">Sent</span>
+                        <p class="content-package" id="log-container-sent">
+                        </p>
+                    </div>
+                    <button class="download-log" onclick="saveLog()">
+                        <span class="material-symbols-outlined" style="font-size: 20px;">download_2</span>
+                    </button>
+                </div>
+            </div>
+            <div class="container-form">
+                <div class="group-form">
+                    <div class="row-group">
+                        <div class="group-field">
+                            <label class="options-initial">
+                                <span class="material-symbols-outlined" style="font-size: 20px;">language</span>
+                                Connection
+                            </label>
+                            <select class="field custom-select" onchange="selectProtocol(this)">
+                                <option value="tcp">TCP</option>
+                                <option value="udp">UDP</option>
+                            </select>
+                        </div>
+                        <div class="group-field">
+                            <label class="options-initial">
+                                <span class="material-symbols-outlined" style="font-size: 20px;">swap_horiz</span>
+                                Format
+                            </label>
+                            <select class="field custom-select" onchange="selectFormat(this)">
+                                <option value="hexa">HEXA</option>
+                                <option value="ascii">ASCII</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row-group">
+                        <div class="group-field">
+                            <label>Servers</label>
+                            <select class="field custom-select" id="default-servers">
+                                <option value="localhost:65432">SERVIDOR 1</option>
+                                <option value="177.129.4.51:9131">SERVIDOR 2</option>
+                                <option value="172.19.1.39:9131">SERVIDOR 3</option>
+                            </select>
+                            <input type="text" placeholder="Domain:Port" class="field" id="custom-server" />
+                            <button class="btn-default" id="save-connection" onclick="saveConnection()">Save connection</button>
+                        </div>
+                        <div class="group-checkbox">
+                            <input type="checkbox" id="custom-server-checkbox" class="field-checkbox" onchange="toggleCustom()" />&nbsp;Custom IP & Port
+                        </div>
+                    </div>
+                    <button class="btn-default" id="btn-connect" onclick="toggleConnection()">
+                        Connect
+                    </button>
+                    <button class="btn-default" id="btn-disconnect" onclick="disconnectWebSocket()">
+                        Disconnect
+                    </button>
+                    <div>
+                        <label class="label-packages">Saved packages</label>
+                    </div>
+                    <div class="container-packages">
+                        <div class="list-packages"></div>
+                    </div>
+                    <!--Botão abrir modal-->
+                    <button type="button" class="btn btn-primary" onclick="openModal()">
+                        Abrir Pop-up
+                       </button>
+                </div>
+                <div class="container-send">
+                    <div class="group-field">
+                        <label>Send</label>
+                        <div class="input-icon">
+                            <input type="text" placeholder="Enter the message" class="field" id="field-message" />
+                            <button class="btn-icon-input" id="btn-send" disabled onclick="sendMessage('field-message')">
+                                <span class="material-symbols-outlined" style="font-size: 20px;">send</span>
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <button class="btn-default btn-save" id="saveButton" disabled style="width: 150px;">
+                        Save package
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+        <script src="./static/js/darkmodeButton.js"></script>
+
+        <!-- Bootstrap JavaScript -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <script>
+            function openModal() {
+                // Mostrar o modal
+                $('#tituloModal').modal('show');
+            }
+        </script>
+
+        <script>
+
+            (function ($) {
+                "use strict";
+
+                $(function () {
+                    var header = $(".start-style");
+                    $(window).scroll(function () {
+                        var scroll = $(window).scrollTop();
+
+                        if (scroll >= 10) {
+                            header.removeClass('start-style').addClass("scroll-on");
+                        } else {
+                            header.removeClass("scroll-on").addClass('start-style');
+                        }
+                    });
+                });
+
+                //Animation
+
+                $(document).ready(function () {
+                    $('body.hero-anime').removeClass('hero-anime');
+                });
+
+                //Menu On Hover
+
+                $('body').on('mouseenter mouseleave', '.nav-item', function (e) {
+                    if ($(window).width() > 750) {
+                        var _d = $(e.target).closest('.nav-item'); _d.addClass('show');
+                        setTimeout(function () {
+                            _d[_d.is(':hover') ? 'addClass' : 'removeClass']('show');
+                        }, 1);
+                    }
+                });
+
+                //Switch light/dark
+
+                $(document).ready(function () {
+                    // Inicializa a função switchMode
+                    function switchMode() {
+                        if ($("body").hasClass("dark")) {
+                            $("body").removeClass("dark");
+                            $("#switch").removeClass("switched");
+                        } else {
+                            $("body").addClass("dark");
+                            $("#switch").addClass("switched");
+                        }
+                    }
+
+                    // Vincula a função switchMode ao clique do botão
+                    $("#switchButton").on("click", function () {
+                        switchMode();
+                    });
+                });
+
+                $("#switch").on('click', function () {
+                    if ($("body").hasClass("dark")) {
+                        $("body").removeClass("dark");
+                        $("#switch").removeClass("switched");
+                    }
+                    else {
+                        $("body").addClass("dark");
+                        $("#switch").addClass("switched");
+                    }
+                });
+
+            })(jQuery);
+
+        </script>
+
+        <script src="./static/js/navbar.js"></script>
+</body>
+
+</html>
