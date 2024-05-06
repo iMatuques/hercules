@@ -81,8 +81,9 @@ async def handle_websocket(websocket, path):
                 response = client.recv(1024)
                 if message_type == "hex":
                     response = response.hex()
+                    print(response)
                 print(f"Resposta do servidor {protocol.upper()}: {response}")
-                await websocket.send(response.decode())
+                await websocket.send(response)
             except BlockingIOError:
                 # Não há resposta disponível, continuar para a próxima iteração do loop
                 pass

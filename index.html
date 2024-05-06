@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Log de Mensagens</title>
+    <title>Log Message</title>
     <script src="socket.io.min.js"></script>
     <link rel="stylesheet" href="./static/index.css">
+    <link rel="shortcut icon" type="image/x-icon" href="./static/images/icons/tools.png">
     <link rel="stylesheet" href="./static/css/darkmodeButton.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./static/css/navbar.css">
@@ -25,186 +26,186 @@
 
     <!--Modal-->
 
+    <div class="container">
+        <div class="modal" id="tituloModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title" style="color:black">Salvar pacote</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="titulo" style="color:black">Título:</label>
+                            <input type="text" class="form-control" id="titulo">
+                            <label for="obs" style="color:black">Use um título diferente para cada pacote!</label>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="save-package"
+                            onclick="savePacket('saved-message')">Salvar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Navbar-->
+    <div class="navigation-wrap bg-light start-header start-style">
         <div class="container">
-            <div class="modal" id="tituloModal">
-                <div class="modal-dialog">
-                    <div class="modal-content">
+            <div class="row">
+                <div class="col-12">
+                    <nav class="navbar navbar-expand-md navbar-light">
 
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h4 class="modal-title" style="color:black">Salvar pacote</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <a class="navbar-brand"><img src="./static/images/icons/logo.png" alt=""></a>
+
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto py-4 py-md-0">
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link" href="/home">Home</a>
+                                </li>
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                        aria-haspopup="true" aria-expanded="false">Ferramentas</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/parserPackets">Parser Packets</a>
+                                        <a class="dropdown-item" href="#">Hércules só que bom</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link" href="#">Tutoriais</a>
+                                </li>
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link" href="#" onclick="switchMode()">Sugestões</a>
+                                </li>
+                                <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                                        aria-haspopup="true" aria-expanded="false">{{username}}</a>
+                                    <div class="dropdown-menu" onclick="switchMode()">
+                                        <a class="dropdown-item">
+                                            <img id="sunIcon" src="./static/images/icons/sun.svg"
+                                                style="max-width: 20px; max-height: 20px;" alt="Sun Icon">
+                                            <img id="moonIcon" src="./static/images/icons/moon.svg"
+                                                style="max-width: 20px; max-height: 20px;" alt="Moon Icon"
+                                                style="display: none;">
+                                        </a>
+                                        <a class="dropdown-item" href="/logout">Logout</a>
+                                    </div>
+                                </li>
+
+                            </ul>
                         </div>
 
-                        <!-- Modal Body -->
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="titulo" style="color:black">Título:</label>
-                                <input type="text" class="form-control" id="titulo">
-                                <label for="obs" style="color:black">Use um título diferente para cada pacote!</label>
-                            </div>
-                        </div>
-
-                        <!-- Modal Footer -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-success" onclick="salvarComTitulo()">Salvar</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        </div>
-
-                    </div>
+                    </nav>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!--Navbar-->
-        <div class="navigation-wrap bg-light start-header start-style">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <nav class="navbar navbar-expand-md navbar-light">
-
-                            <a class="navbar-brand"><img src="./static/images/icons/logo.png" alt=""></a>
-
-                            <button class="navbar-toggler" type="button" data-toggle="collapse"
-                                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                                aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-
-                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                <ul class="navbar-nav ml-auto py-4 py-md-0">
-                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                        <a class="nav-link" href="/home">Home</a>
-                                    </li>
-                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-                                            role="button" aria-haspopup="true" aria-expanded="false">Ferramentas</a>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="/parserPackets">Parser Packets</a>
-                                            <a class="dropdown-item" href="#">Hércules só que bom</a>
-                                        </div>
-                                    </li>
-                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                        <a class="nav-link" href="#">Tutoriais</a>
-                                    </li>
-                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                        <a class="nav-link" href="#" onclick="switchMode()">Sugestões</a>
-                                    </li>
-                                    <li class="nav-item pl-4 pl-md-0 ml-0 ml-md-4">
-                                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"
-                                            role="button" aria-haspopup="true" aria-expanded="false">{{username}}</a>
-                                        <div class="dropdown-menu" onclick="switchMode()">
-                                            <a class="dropdown-item">
-                                                <img id="sunIcon" src="./static/images/icons/sun.svg"
-                                                    style="max-width: 20px; max-height: 20px;" alt="Sun Icon">
-                                                <img id="moonIcon" src="./static/images/icons/moon.svg"
-                                                    style="max-width: 20px; max-height: 20px;" alt="Moon Icon"
-                                                    style="display: none;">
-                                            </a>
-                                            <a class="dropdown-item" href="/logout">Logout</a>
-                                        </div>
-                                    </li>
-
-                                </ul>
-                            </div>
-
-                        </nav>
-                    </div>
-                </div>
+    <!--Hercules -->
+    <div class="container__main">
+        <div class="container-actions-log">
+            <button class="clean-log" onclick="cleanLog()">
+                <span class="material-symbols-outlined" style="font-size: 20px;">mop</span>
+            </button>
+            <button class="download-log" onclick="saveLog()">
+                <span class="material-symbols-outlined" style="font-size: 20px;">download_2</span>
+            </button>
+            <label>Receive/Sent data</label>
+            <div class="container-log">
+                <div id="group-log"></div>
             </div>
         </div>
-
-        <!--Hercules -->
-        <div class="container__main">
-            <div>
-                <label>Receive/Sent data</label>
-                <div class="container-log">
-                    <div id="group-log">
-                        <span class="title-receive_sent">Receive</span>
-                        <p class="content-package" id="log-container-receive"> <!-- Log de mensagens será exibido aqui -->
-                        </p>
-                        <span class="title receive-sent">Sent</span>
-                        <p class="content-package" id="log-container-sent">
-                        </p>
-                    </div>
-                    <button class="download-log" onclick="saveLog()">
-                        <span class="material-symbols-outlined" style="font-size: 20px;">download_2</span>
-                    </button>
-                </div>
-            </div>
-            <div class="container-form">
-                <div class="group-form">
-                    <div class="row-group">
-                        <div class="group-field">
-                            <label class="options-initial">
-                                <span class="material-symbols-outlined" style="font-size: 20px;">language</span>
-                                Connection
-                            </label>
-                            <select class="field custom-select" onchange="selectProtocol(this)">
-                                <option value="tcp">TCP</option>
-                                <option value="udp">UDP</option>
-                            </select>
-                        </div>
-                        <div class="group-field">
-                            <label class="options-initial">
-                                <span class="material-symbols-outlined" style="font-size: 20px;">swap_horiz</span>
-                                Format
-                            </label>
-                            <select class="field custom-select" onchange="selectFormat(this)">
-                                <option value="hexa">HEXA</option>
-                                <option value="ascii">ASCII</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row-group">
-                        <div class="group-field">
-                            <label>Servers</label>
-                            <select class="field custom-select" id="default-servers">
-                                <option value="localhost:65432">SERVIDOR 1</option>
-                                <option value="177.129.4.51:9131">SERVIDOR 2</option>
-                                <option value="172.19.1.39:9131">SERVIDOR 3</option>
-                            </select>
-                            <input type="text" placeholder="Domain:Port" class="field" id="custom-server" />
-                            <button class="btn-default" id="save-connection" onclick="saveConnection()">Save connection</button>
-                        </div>
-                        <div class="group-checkbox">
-                            <input type="checkbox" id="custom-server-checkbox" class="field-checkbox" onchange="toggleCustom()" />&nbsp;Custom IP & Port
-                        </div>
-                    </div>
-                    <button class="btn-default" id="btn-connect" onclick="toggleConnection()">
-                        Connect
-                    </button>
-                    <button class="btn-default" id="btn-disconnect" onclick="disconnectWebSocket()">
-                        Disconnect
-                    </button>
-                    <div>
-                        <label class="label-packages">Saved packages</label>
-                    </div>
-                    <div class="container-packages">
-                        <div class="list-packages"></div>
-                    </div>
-                    <!--Botão abrir modal-->
-                    <button type="button" class="btn btn-primary" onclick="openModal()">
-                        Abrir Pop-up
-                       </button>
-                </div>
-                <div class="container-send">
+        <div class="container-form">
+            <div class="group-form">
+                <div class="row-group">
                     <div class="group-field">
-                        <label>Send</label>
+                        <label class="options-initial">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">language</span>
+                            Connection
+                        </label>
+                        <select class="field custom-select" id="select-connection" onchange="selectProtocol(this)">
+                            <option value="tcp">TCP</option>
+                            <option value="udp">UDP</option>
+                        </select>
+                    </div>
+                    <div class="group-field">
+                        <label class="options-initial">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">swap_horiz</span>
+                            Format
+                        </label>
+                        <select class="field custom-select" id="select-format" onchange="selectFormat(this)">
+                            <option value="hex">HEXA</option>
+                            <option value="ascii">ASCII</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row-group">
+                    <div class="group-field">
+                        <label>Servers</label>
+                        <select class="field custom-select" id="default-servers">
+                            <option value="localhost:65432">SERVIDOR 1</option>
+                            <option value="177.129.4.51:9131">SERVIDOR 2</option>
+                            <option value="172.19.1.39:9131">SERVIDOR 3</option>
+                        </select>
+                        <input type="text" placeholder="Domain:Port" class="field" id="custom-server" />
+                    </div>
+                    <div class="container-custom-server">
+                        <button class="btn-default" id="save-connection" onclick="saveConnection()">Save
+                            connection</button>
+                        <div class="group-checkbox">
+                            <input type="checkbox" id="custom-server-checkbox" class="field-checkbox"
+                                onchange="toggleCustom()" />&nbsp;Custom IP & Port
+                        </div>
+                    </div>
+                </div>
+                <button class="btn-default" id="btn-connect" onclick="toggleConnection()">
+                    Connect
+                </button>
+                <button class="btn-default" id="btn-disconnect" onclick="disconnectWebSocket()">
+                    Disconnect
+                </button>
+                <div>
+                    <label class="label-packages">Saved packages</label>
+                </div>
+                <div class="container-packages">
+                    <div class="message-not-found-packages">
+                        <img src="./img/plug-offline.png" width="200px" height="auto" alt="Not Found" />
+                        <span>No server selected</span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="container-send">
+                <div class="group-field">
+                    <label>Send</label>
+                    <div class="input-icon">
                         <div class="input-icon">
-                            <input type="text" placeholder="Enter the message" class="field" id="field-message" />
-                            <button class="btn-icon-input" id="btn-send" disabled onclick="sendMessage('field-message')">
+                            <input type="text" placeholder="Enter the message" class="field" id="saved-message" />
+                            <button class="btn-default btn-icon-input" id="btn-send" disabled
+                                onclick="sendMessage('saved-message')">
                                 <span class="material-symbols-outlined" style="font-size: 20px;">send</span>
                             </button>
                         </div>
                     </div>
-
-
-                    <button class="btn-default btn-save" id="saveButton" disabled style="width: 150px;">
-                        Save package
-                    </button>
-
                 </div>
+                <button class="btn-default btn-save" id="saveButton" style="width: 150px;" onclick="openModal()" >
+                    Save package
+                </button>
             </div>
         </div>
 
@@ -221,6 +222,7 @@
                 $('#tituloModal').modal('show');
             }
         </script>
+
 
         <script>
 
